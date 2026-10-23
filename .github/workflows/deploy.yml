@@ -47,13 +47,3 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-
-      - name: Set up Kubectl
-        uses: azure/setup-kubectl@v3
-
-      - name: Deploy to Kubernetes
-        env:
-          KUBECONFIG_DATA: ${{ secrets.KUBECONFIG }}
-        run: |
-          echo "$KUBECONFIG_DATA" | base64 -d > kubeconfig.yaml
-          kubectl --kubeconfig=kubeconfig.yaml apply -f deployments/k8s/deployment.yaml
