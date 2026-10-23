@@ -6,12 +6,13 @@ on:
   push:
     branches: [ "main" ]
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
 
     steps:
       - name: Checkout Repository
@@ -49,8 +50,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-
-          - name: Set up Kubectl
+      - name: Set up Kubectl
         uses: azure/setup-kubectl@v3
 
       - name: Deploy to Kubernetes
