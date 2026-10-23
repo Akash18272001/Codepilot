@@ -1,12 +1,15 @@
+# Build Stage
 FROM golang:1.22-alpine AS builder
 WORKDIR /app
-COPY go.mod ./
-RUN go mod download || true
+COPY go.mod go.sum ./
+RUN go mod download
 COPY . .
-RUN CGO_ENABLED=0 GOOS=linux go build -o agent-server ./cmd/server/main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -o /codepilot-agent cmd/server/main.go
 
-FROM alpine:latest
+# Run Stage
+FROM alpine:3.20
+RUN apk --no-cache add ca-certificates
 WORKDIR /root/
-COPY --from=builder /app/agent-server .
+COPY --from=builder /codepilot-agent .
 EXPOSE 8080
-CMD ["./agent-server"]
+CMD ["./codepilot-agent"]

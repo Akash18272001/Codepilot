@@ -1,0 +1,24 @@
+# Environment & Secrets
+.env
+*.local
+
+# Go Binaries & Build Artifacts
+/bin/
+/dist/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# IDE & Editor Configurations
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Kubernetes local overrides
+deployments/k8s/secrets.yaml

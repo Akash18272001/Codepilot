@@ -1,38 +1,64 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ai-agent-backend
+  name: codepilot-agent
+  namespace: default
   labels:
-    app: ai-agent
+    app: codepilot-agent
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
-      app: ai-agent
+      app: codepilot-agent
   template:
     metadata:
       labels:
-        app: ai-agent
+        app: codepilot-agent
     spec:
       containers:
-      - name: agent-backend
-        image: ai-agent-backend:latest
-        imagePullPolicy: IfNotPresent
-        env:
-        - name: OLLAMA_HOST
-          value: "http://ollama-service:11434"
+      - name: agent
+        image: your-dockerhub-username/codepilot-agent:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: codepilot-config
+        env:
+        - name: GITHUB_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: codepilot-secrets
+              key: GITHUB_TOKEN
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 15
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: ai-agent-service
+  name: codepilot-agent-svc
+namespace: default
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
-    app: ai-agent
+    app: codepilot-agent
   ports:
-    - port: 8080
-      targetPort: 8080
-      nodePort: 30080
+  - port: 80
+    targetPort: 8080

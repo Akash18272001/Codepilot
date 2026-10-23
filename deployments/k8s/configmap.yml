@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: codepilot-config
+  namespace: default
+data:
+  PORT: "8080"
+  OLLAMA_HOST: "http://ollama-service.ollama.svc.cluster.local:11434"
+  OLLAMA_MODEL: "qwen2.5-coder:7b"
+  GITHUB_OWNER: "Akash18272001"
+  GITHUB_REPO: "Codepilot"
