@@ -58,16 +58,19 @@ func validateToolCall(req ToolRequest) error {
 }
 
 type LogSearchTool struct{}
+
 func (t *LogSearchTool) Execute(args map[string]interface{}) (string, error) {
 	return "[LOGS] Found 14 HTTP 500 error traces at /api/orders: payload batch size 52 exceeds slice capacity of 50", nil
 }
 
 type DatabaseTool struct{}
+
 func (t *DatabaseTool) Execute(args map[string]interface{}) (string, error) {
 	return "[DB] Order table state healthy. Max items column limit = 50 items per bulk query transaction.", nil
 }
 
 type CodeSearchTool struct{}
+
 func (t *CodeSearchTool) Execute(args map[string]interface{}) (string, error) {
 	return "[CODE] Found handler at controllers/orders.go: line 42 throws Panic on len(items) > 50", nil
 }

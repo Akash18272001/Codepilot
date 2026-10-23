@@ -22,10 +22,8 @@ func AssessRisk(actionDescription string) RiskLevel {
 
 func RequestHumanApproval(actionDescription string) bool {
 	risk := AssessRisk(actionDescription)
-	fmt.Printf("
-[RISK ENGINE] Evaluated action '%s' -> Risk Level: %s
-", actionDescription, risk)
-	
+	fmt.Printf("\n[RISK ENGINE] Evaluated action '%s' -> Risk Level: %s\n", actionDescription, risk)
+
 	if risk == RiskHigh {
 		fmt.Println("[HUMAN-IN-THE-LOOP] High risk action flagged! System automatically requesting approval...")
 		fmt.Println("[HUMAN-IN-THE-LOOP] ✅ Human Supervisor Approved Patch Creation.")

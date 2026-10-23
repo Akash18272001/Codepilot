@@ -42,8 +42,7 @@ func main() {
 		port = "8080"
 	}
 
-	fmt.Printf("🚀 AI Software Engineering Agent backend running on port %s
-", port)
+	fmt.Printf("🚀 AI Software Engineering Agent backend running on port %s\n", port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
 
@@ -59,39 +58,30 @@ func handleTriage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("
-[AGENT] Received issue: %s
-", req.Issue)
+	fmt.Printf("\n[AGENT] Received issue: %s\n", req.Issue)
 
 	// Step 1: Orchestrator Plan
-	plan := fmt.Sprintf("1. Search logs for errors related to issue.
-2. Query database for relevant records.
-3. Search code for affected endpoints.")
-	fmt.Printf("[PLANNER] Plan generated:
-%s
-", plan)
+	plan := "1. Search logs for errors related to issue.\n2. Query database for relevant records.\n3. Search code for affected endpoints."
+	fmt.Printf("[PLANNER] Plan generated:\n%s\n", plan)
 
 	// Step 2: Tool Calls via Go Tool Server
 	logResult := tools.ExecuteTool(tools.ToolRequest{
-		Name: "search_logs",
+		Name:      "search_logs",
 		Arguments: map[string]interface{}{"query": "500 order items > 50"},
 	})
-	fmt.Printf("[TOOL: search_logs] Result: %s
-", logResult.Output)
+	fmt.Printf("[TOOL: search_logs] Result: %s\n", logResult.Output)
 
 	dbResult := tools.ExecuteTool(tools.ToolRequest{
-		Name: "query_database",
+		Name:      "query_database",
 		Arguments: map[string]interface{}{"query": "SELECT * FROM orders WHERE item_count > 50 LIMIT 5;"},
 	})
-	fmt.Printf("[TOOL: query_database] Result: %s
-", dbResult.Output)
+	fmt.Printf("[TOOL: query_database] Result: %s\n", dbResult.Output)
 
 	codeResult := tools.ExecuteTool(tools.ToolRequest{
-		Name: "search_code",
+		Name:      "search_code",
 		Arguments: map[string]interface{}{"path": "/api/orders"},
 	})
-	fmt.Printf("[TOOL: search_code] Result: %s
-", codeResult.Output)
+	fmt.Printf("[TOOL: search_code] Result: %s\n", codeResult.Output)
 
 	// Step 3: Synthesis / LLM Analysis (Fallback to mock if Ollama not available)
 	llmPrompt := fmt.Sprintf("Analyze issue: %s. Logs: %s. DB: %s. Code: %s. Provide root cause and patch.",

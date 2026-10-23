@@ -51,6 +51,13 @@ jobs:
       - name: Set up Kubectl
         uses: azure/setup-kubectl@v3
 
+        - name: Check Go Formatting
+        run: |
+          if [ -n "$(go fmt ./...)" ]; then
+            echo "Code is not formatted. Please run 'go fmt ./...' locally."
+            exit 1
+          fi
+
       - name: Deploy to Kubernetes
         env:
           KUBECONFIG_DATA: ${{ secrets.KUBECONFIG }}
